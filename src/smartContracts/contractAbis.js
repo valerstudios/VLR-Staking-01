@@ -1,5 +1,5 @@
-export const eVlr1Address = 0x82ba66f57d5e419e990767cf85edff480350723b;
-export const eVlrStakerAddress = 0x0f9aba7e95abf661e1fe6ee8497edb7df3d25784;
+export const eVlr1Address = "0x82ba66f57d5e419e990767cf85edff480350723b";
+export const eVlrStakerAddress = "0x0f9aba7e95abf661e1fe6ee8497edb7df3d25784";
 
 export const erc20ABi = [
   {
