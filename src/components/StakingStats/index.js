@@ -13,6 +13,7 @@ import { usdFormatter } from "../../utils/index.js";
 // const signer = new ethers.providers.Web3Provider(window.ethereum).getSigner();
 // const eVlr = new Contract(eVlr1Address, erc20ABi, signer);
 
+
 export default function StakingStats() {
   const [evlrBalance, setEvlrBalance] = useState(0);
   const [svlrBalance, setSvlrBalance] = useState(0);
@@ -21,9 +22,24 @@ export default function StakingStats() {
 
   const { staker, mockEvlr } = useStaker();
   useEffect(async () => {
+    const { ethereum } = window;
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+
+    ethereum.on("accountsChanged", async(accounts) => {
+      let balance = await mockEvlr.balanceOf(accounts[0]);
+      setEvlrBalance(Number(balance));
+      const stakedEvlr = await staker.balanceOf(accounts[0])
+      console.log("my balance: ", Number(stakedEvlr))
+      let totalSupply = (Number(await staker.totalSupply()));
+      console.log("total supply: ", totalSupply)
+      let ownershipPercent = (Number(stakedEvlr) *1000)/(totalSupply);
+      setRewardOwnership(ownershipPercent)
+      let svlrBalance = await staker.totalSupply();
+      setSvlrBalance(Number(svlrBalance));
+      const charityAddress = await staker.getCharityAddress();
+      setCharityBalance(Number(await mockEvlr.balanceOf(charityAddress)));
+    });
     if (staker) {
-      console.log(staker.address);
-      const { ethereum } = window;
       const accounts = await ethereum.request({ method: "eth_accounts" });
       let balance = await mockEvlr.balanceOf(accounts[0]);
       setEvlrBalance(Number(balance));

@@ -29,7 +29,9 @@ function App() {
   );}
   else{
     return(
-      <h2>Please connect metamask</h2>
+      <Style.MainArea>
+      <StatusBar />
+    </Style.MainArea>
     )
   }
 }

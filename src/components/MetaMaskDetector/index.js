@@ -4,14 +4,13 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import MetaMaskOnboarding from "@metamask/onboarding";
 import Tooltip from "@mui/material/Tooltip";
 
-export default function StatusBar() {
-  // using Nanopop lib for title positioning
-  // titleTooltip({
-  //   onShow: function(reference, popper){
-  //     reposition(reference, popper,{position: 'bottom-middle'})
-  //   }
-  // })
+const statusColorCode = {
+  true: "#76977D",
+  false: "#DC7260",
+  neither: "grey",
+};
 
+export default function StatusBar() {
   //function to copy address of connected metamask account
   const addressCopy = async () => {
     let copyText = await getConnectedAccount();
@@ -27,11 +26,11 @@ export default function StatusBar() {
   const connectionAction = async (foundStatus) => {
     if (foundStatus == true) {
       setConnectText("\u2713 Connected");
-      setStatusColor("green");
+      setStatusColor(statusColorCode.true);
       setConnectDisable(true);
       setDisplayStatus("flex");
       getConnectedAccount().then((result) => {
-        setConnectedAddress(result[0][0].slice(0, 7));
+        setConnectedAddress(result[0][0]);
         if (result[1] == "0x61") setConnectedChain("BSC Test");
         else if (result[1] == "0x38") setConnectedChain("BSC Mainnet");
         else {
@@ -41,7 +40,7 @@ export default function StatusBar() {
       setConnectBackground("green");
       setConnectTextColor("white");
     } else {
-      setStatusColor("red");
+      setStatusColor(statusColorCode.false);
       setConnectText("Connect Account");
       setConnectDisable(false);
       setDisplayStatus("none");
@@ -66,7 +65,6 @@ export default function StatusBar() {
   //Function to install metamask
   const onClickInstall = () => {
     setInstallText("Reload After Install");
-    setInstallDisabledStatus(true);
     onboarding.startOnboarding();
   };
 
@@ -95,24 +93,22 @@ export default function StatusBar() {
 
   let installed = false;
   let [installText, setInstallText] = useState("Searching for MetaMask");
-  let [installDisabledStatus, setInstallDisabledStatus] = useState(false);
   let [connectText, setConnectText] = useState("Connect Account");
-  let [statusColor, setStatusColor] = useState();
-  let [connectDisable, setConnectDisable] = useState(false);
+  let [statusColor, setStatusColor] = useState(statusColorCode.neither);
+  let [connectDisable, setConnectDisable] = useState(true);
   let [installButtonColor, setInstallButtonColor] = useState();
   let [displayStatus, setDisplayStatus] = useState("none");
-  let [connectedAddress, setConnectedAddress] = useState();
+  let [connectedAddress, setConnectedAddress] = useState("0x0000000000000000000000000000000000000000");
   let [connectedChain, setConnectedChain] = useState();
-  let [connectBackground, setConnectBackground] = useState("white");
+  let [connectBackground, setConnectBackground] = useState(statusColorCode.neither);
   let [connectTextColor, setConnectTextColor] = useState({ statusColor });
 
   useEffect(async () => {
     const { ethereum } = window;
     installed = await isMetaMaskInstalled();
     if (installed) {
-      setInstallButtonColor("green");
+      setInstallButtonColor(statusColorCode.true);
       setInstallText("MetaMask Installed");
-      setInstallDisabledStatus(true);
       setConnectDisable(false);
       let activeAccounts = await getConnectedAccount();
       if (activeAccounts[0].length > 0) {
@@ -125,12 +121,12 @@ export default function StatusBar() {
         if (accounts.length > 0) {
           connectionAction(true);
         } else {
-          connectionAction(false);
+          window.location.reload();
         }
       });
     } else {
-      setInstallText("Install MetaMask");
-      setInstallButtonColor("white");
+      setInstallText("Click To Install MetaMask");
+      setInstallButtonColor(statusColorCode.false);
       setConnectDisable(true);
       setStatusColor("grey");
     }
@@ -140,8 +136,7 @@ export default function StatusBar() {
     <S.Bar>
       <S.InstallStatus
         color={installButtonColor}
-        disabled={installDisabledStatus}
-        onClick={() => onClickInstall()}
+        onClick={(e) => (installButtonColor==statusColorCode.true ? e.preventDefault() : onClickInstall())}
       >
         {installText}
       </S.InstallStatus>
@@ -150,18 +145,18 @@ export default function StatusBar() {
       <S.Dot color={statusColor}></S.Dot>
       <S.Arrow color={statusColor}>{"\u25bc"}</S.Arrow>
       <S.Connect
-        background={connectBackground}
+        background={statusColor}
         disabled={connectDisable}
         color={connectTextColor}
         onClick={() => onClickConnect()}
       >
         {connectText}
       </S.Connect>
-      <S.AccountDetails display={displayStatus}>
+      <S.AccountDetails background={statusColor} display={displayStatus}>
         <S.AddressRow>
           <Tooltip title="Click to Copy Full Address" arrow>
             <S.CopyAccount onClick={() => addressCopy()}>
-              Address Starts: <b>{connectedAddress}</b>
+              Address: <b>{connectedAddress.slice(0,5)} ... {connectedAddress.slice(38, 42)}</b>
             </S.CopyAccount>
           </Tooltip>
           <S.AccountLine>

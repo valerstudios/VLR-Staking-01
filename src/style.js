@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MainArea = styled.div`
-background: #1976d2;
+background: #6B6D6C;
 width: 100%;
 min-height: 450px;
 display: flex;
