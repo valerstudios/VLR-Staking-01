@@ -75,9 +75,7 @@ export const getConnectedAccount = async () => {
 
 export function useActiveWeb3React() {
   const context = useWeb3ReactCore();
-  console.log(context)
-  // const contextNetwork = useWeb3ReactCore<Web3Provider>('NETWORK')
-  // return context.active ? context : contextNetwork
+
   return context.active ? context : null;
 }
 
