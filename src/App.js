@@ -19,20 +19,26 @@ function App() {
     }
   }, []);
 
-  if(active){
-  return (
-    <Style.MainArea>
-      <StatusBar />
-      <StakingBox />
-      <StakingStats />
-    </Style.MainArea>
-  );}
-  else{
-    return(
+  if (active) {
+    return (
       <Style.MainArea>
-      <StatusBar />
-    </Style.MainArea>
-    )
+        <StatusBar />
+        <Style.StakingArea>
+          <Style.StakingNumbers>
+            <StakingStats />
+          </Style.StakingNumbers>
+          <Style.StakingInputs>
+            <StakingBox />
+          </Style.StakingInputs>
+        </Style.StakingArea>
+      </Style.MainArea>
+    );
+  } else {
+    return (
+      <Style.MainArea>
+        <StatusBar />
+      </Style.MainArea>
+    );
   }
 }
 

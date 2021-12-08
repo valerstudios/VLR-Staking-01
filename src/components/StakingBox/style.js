@@ -4,7 +4,7 @@ export const StakingArea = styled.div`
 background: #1976d2;
 display: flex;
 order: 2;
-flex-direction: column;
+flex-direction: row;
 `
 
 export const StakerButton = styled.button`

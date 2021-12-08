@@ -3,6 +3,8 @@ import * as Style from "./style.js";
 import useStaker from "../../useStaker.js";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import { usdFormatter } from "../../utils/index.js";
+import * as Constant from "../../utils/constants.js";
 
 async function stake(staker, mockEvlr, amountStaked, signer, provider2) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -47,7 +49,22 @@ async function unstake(staker, mockEvlr, amountUnstaked, signer) {
 export default function StakingBox() {
   const [inputAmount, setInputAmount] = useState(0);
   const { staker, mockEvlr, signer, provider } = useStaker();
+  const [evlrBalance, setEvlrBalance] = useState(0);
 
+  useEffect(async()=>{
+    const { ethereum } = window;
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+
+    ethereum.on("accountsChanged", async (accounts) => {
+      let balance = await mockEvlr.balanceOf(accounts[0]);
+      setEvlrBalance(Number(balance));
+    })
+
+    if(staker){
+      let balance = await mockEvlr.balanceOf(accounts[0]);
+      setEvlrBalance(Number(balance));
+    }
+  })
   return (
     <Style.StakingArea>
       <Style.StakerInput onInput={(e) => setInputAmount(e.target.value)} />
@@ -61,6 +78,8 @@ export default function StakingBox() {
       >
         UnStake
       </Style.StakerButton>
+      {Constant.tokenSymbol} balance: {usdFormatter.format(evlrBalance)}
+
     </Style.StakingArea>
   );
 }

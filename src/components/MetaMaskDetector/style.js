@@ -114,5 +114,4 @@ export const CopyAccount = styled.button`
             color: white;
             cursor: grab;
           }
-
 `
