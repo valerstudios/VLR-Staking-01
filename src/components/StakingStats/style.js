@@ -22,8 +22,3 @@ export const StatLine = styled.h3`
 width: 100%;
 `
 
-export const MyCardContent = styled(CardContent)`
-  background: #7694ab;
-  border-radius: 25px;
-`;
-
