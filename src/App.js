@@ -5,6 +5,7 @@ import StakingStats from "./components/StakingStats/index.js";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
+import NetworkRedirect from "./components/NetworkRedirect/index.js";
 import { isMetaMaskInstalled } from "./utils/index.js";
 
 export const injected = new InjectedConnector({
@@ -19,7 +20,7 @@ function App() {
     }
   }, []);
 
-  if (active) {
+  if (active && (chainId == "0x61"||chainId == "0x38")) {
     return (
       <Style.MainArea>
         <StatusBar />
@@ -37,6 +38,7 @@ function App() {
     return (
       <Style.MainArea>
         <StatusBar />
+        <NetworkRedirect/>
       </Style.MainArea>
     );
   }

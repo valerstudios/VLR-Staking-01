@@ -35,6 +35,7 @@ export default function StatusBar() {
         else if (result[1] == "0x38") setConnectedChain("BSC Mainnet");
         else {
           setConnectedChain("Unknown Chain");
+          alert("Wrong network")
         }
       });
       setConnectBackground("green");
