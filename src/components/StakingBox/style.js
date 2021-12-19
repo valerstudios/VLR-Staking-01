@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Button } from "@mui/material";
 
 export const StakingArea = styled.div`
+  margin-bottom: 25px;
   display: flex;
   order: 2;
   flex-direction: column;
@@ -26,3 +27,13 @@ export const StakerInput = styled.input`
 export const MyBalance = styled.h3`
   width: 100%;
 `;
+
+export const PendingBox = styled.div`
+display: flex;
+order: 2;
+flex-direction: column;
+background: #dc7260;
+border-radius: 25px;
+padding: 5%;
+margin-bottom: 25px;
+`
