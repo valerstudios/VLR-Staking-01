@@ -104,40 +104,42 @@ export default function StatusBar() {
   let [connectBackground, setConnectBackground] = useState(statusColorCode.neither);
   let [connectTextColor, setConnectTextColor] = useState({ statusColor });
 
-  useEffect(async () => {
-    const { ethereum } = window;
-    installed = await isMetaMaskInstalled();
-    if (installed) {
-      setInstallButtonColor(statusColorCode.true);
-      setInstallText("MetaMask Installed");
-      setConnectDisable(false);
-      let activeAccounts = await getConnectedAccount();
-      if (activeAccounts[0].length > 0) {
-        connectionAction(true);
-      } else {
-        connectionAction(false);
-      }
-
-      ethereum.on("accountsChanged", (accounts) => {
-        if (accounts.length > 0) {
+  useEffect(() => {
+    (async () => {
+      const { ethereum } = window;
+      installed = await isMetaMaskInstalled();
+      if (installed) {
+        setInstallButtonColor(statusColorCode.true);
+        setInstallText("MetaMask Installed");
+        setConnectDisable(false);
+        let activeAccounts = await getConnectedAccount();
+        console.log(activeAccounts)
+        if (activeAccounts[0].length > 0) {
           connectionAction(true);
         } else {
-          window.location.reload();
+          connectionAction(false);
         }
-      });
-    } else {
-      setInstallText("Click To Install MetaMask");
-      setInstallButtonColor(statusColorCode.false);
-      setConnectDisable(true);
-      setStatusColor("grey");
-    }
+        ethereum.on("accountsChanged", (accounts) => {
+          if (accounts.length > 0) {
+            connectionAction(true);
+          } else {
+            window.location.reload();
+          }
+        });
+      } else {
+        setInstallText("Click To Install MetaMask");
+        setInstallButtonColor(statusColorCode.false);
+        setConnectDisable(true);
+        setStatusColor("grey");
+      }
+    })()
   }, []);
 
   return (
     <S.Bar>
       <S.InstallStatus
         color={installButtonColor}
-        onClick={(e) => (installButtonColor==statusColorCode.true ? e.preventDefault() : onClickInstall())}
+        onClick={(e) => (installButtonColor == statusColorCode.true ? e.preventDefault() : onClickInstall())}
       >
         {installText}
       </S.InstallStatus>
@@ -157,7 +159,7 @@ export default function StatusBar() {
         <S.AddressRow>
           <Tooltip title="Click to Copy Full Address" arrow>
             <S.CopyAccount onClick={() => addressCopy()}>
-              Address: <b>{connectedAddress.slice(0,5)} ... {connectedAddress.slice(38, 42)}</b>
+              Address: <b>{connectedAddress.slice(0, 5)} ... {connectedAddress.slice(38, 42)}</b>
             </S.CopyAccount>
           </Tooltip>
           <S.AccountLine>
